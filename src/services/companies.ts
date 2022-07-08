@@ -1,4 +1,4 @@
-import * as companyRepository from '../repositories/companyRepository.js';
+import * as companyRepository from '../repositories/company.js';
 
 export async function validateCompany(apiKey: string) {
     const company = await companyRepository.findByApiKey(apiKey);
