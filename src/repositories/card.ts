@@ -41,8 +41,8 @@ export async function findByTypeAndEmployeeId(type: TransactionTypes, employeeId
 		`SELECT * FROM cards WHERE type=$1 AND "employeeId"=$2`,
 		[type, employeeId]
 	);
-
-	return result.rows[0];
+	
+	return result.rows;
 }
 
 export async function findByCardDetails(number: string, cardholderName: string, expirationDate: string) {
