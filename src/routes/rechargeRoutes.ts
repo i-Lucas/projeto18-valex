@@ -1,10 +1,10 @@
 import { Router } from 'express';
 
-import cardsMiddleware from '../middlewares/cardsMiddlewares.js';
-import cardsController from '../controllers/cardsControllers.js';
+import cardRecharge from '../controllers/cardRechargeController.js';
+import validateCardRecharge from '../middlewares/cardRechargeMiddleware.js';
 
 const rechargeRouter = Router();
 
-rechargeRouter.post('/recharge', cardsMiddleware.validateCardRecharge, cardsController.cardRecharge); // Refill a card
+rechargeRouter.post('/recharge', validateCardRecharge, cardRecharge); // Refill a card
 
 export default rechargeRouter;

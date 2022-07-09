@@ -1,10 +1,10 @@
 import { Router } from 'express';
 
-import cardsMiddleware from '../middlewares/cardsMiddlewares.js';
-import cardsController from '../controllers/cardsControllers.js';
+import cardPurchase from '../controllers/cardPurchaseController.js';
+import validatePurchases from '../middlewares/cardPurchasesMiddleware.js';
 
 const purchasesRouter = Router();
 
-purchasesRouter.post('/purchases', cardsMiddleware.validatePurchases, cardsController.cardPurchase); // Create a new purchase
+purchasesRouter.post('/purchases', validatePurchases, cardPurchase); // Create a new purchase
 
 export default purchasesRouter;
