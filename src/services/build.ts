@@ -1,21 +1,27 @@
 import { faker } from '@faker-js/faker';
 import encryptionSystem from './encrypted.js';
-import { validateCompany, validateCompanyEmployee } from './companies.js';
-import { validateEmployee } from './employee.js';
-import { checkEmployeeAlreadyCardType } from './cards.js';
+import companiesService from './companies.js';
+import employeeService from './employee.js';
+import cardsService from './cards.js';
 
 import * as cardRepository from '../repositories/card.js';
 
-export async function validateNewCardBusinessRules(apikey: string, employeeId: number, cardType: string) {
+async function validate(apikey: string, employeeId: number, cardType: string) {
 
-    const company = await validateCompany(apikey);
-    const employee = await validateEmployee(employeeId);
-    await validateCompanyEmployee(company.id, employeeId);
-    await checkEmployeeAlreadyCardType(employeeId, cardType);
-    return { employeeId, fullName: employee.fullName, cardType: cardType };
+    const company = await companiesService.validate(apikey);
+    const employee = await employeeService.validate(employeeId);
+
+    await companiesService.validateEmployee(company.id, employeeId);
+    await cardsService.validateEmployeeCardType(employeeId, cardType);
+
+    return {
+        employeeId,
+        fullName: employee.fullName,
+        cardType: cardType
+    };
 };
 
-export async function createNewCard(employeeId: number, cardholderName: string, type: cardRepository.TransactionTypes) {
+async function build(employeeId: number, cardholderName: string, type: cardRepository.TransactionTypes) {
 
     const cardNumber = faker.finance.creditCardNumber('63[7-9]#-####-####-###L');
     const cardCVV = faker.finance.creditCardCVV();
@@ -23,6 +29,7 @@ export async function createNewCard(employeeId: number, cardholderName: string, 
     const expiration = new Date(new Date().getFullYear() + 5, new Date().getMonth()).toISOString().substring(0, 7);
 
     await cardRepository.insert({
+
         employeeId,
         number: cardNumber,
         cardholderName: getFormattedName(cardholderName),
@@ -33,27 +40,37 @@ export async function createNewCard(employeeId: number, cardholderName: string, 
         originalCardId: null,
         isBlocked: true,
         type
+
     });
 
-    return { cardNumber, cardCVV };
-};
-
-export function convertTypes(apikey: string, employeeId: string, cardType: string) {
-
-    apikey = apikey.toString();
-    let employeeIdNumber = parseInt(employeeId);
-    let cardTypeString = cardType.toString();
-    return { apikey, employeeIdNumber, cardTypeString };
+    return {
+        cardNumber,
+        cardCVV
+    };
 };
 
 function getFormattedName(name: string) {
 
     const arrayName = name.split(' ');
+
     if (arrayName.length >= 3) {
+
         const firstName = arrayName[0];
         const middleName = arrayName[1];
         const lastName = arrayName[2];
         const middleNameFirstLetter = middleName.charAt(0);
+
         return `${firstName} ${middleNameFirstLetter} ${lastName}`;
-    } else return name;
+
+    } else {
+
+        return name;
+    }
 };
+
+const buildCardService = {
+    validate,
+    build
+};
+
+export default buildCardService;

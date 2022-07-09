@@ -1,19 +1,26 @@
-import * as cardService from './cards.js';
+import cardsService from './cards.js';
 import encryptionSystem from './encrypted.js';
 
-export async function validateActivateCardBusinessRules(cardCVV: string, password: string) {
+async function validate(cardCVV: string, password: string) {
 
     const encrypted = encryptionSystem.encrypted(cardCVV);
-    const card = await cardService.findCardByCvv(encrypted);
+    const card = await cardsService.findByCode(encrypted);
     if(!card.isBlocked) throw { status: 400, message: 'This card already activated' };
     const currentDate = new Date(new Date().getFullYear(), new Date().getMonth()).toISOString().substring(0, 7);
     if(currentDate > card.expirationDate) throw { status: 400, message: 'This card expired' };
     return card.id;
 };
 
-export async function activateCardService(cardId: number, password: string) {
+async function activate(cardId: number, password: string) {
 
     const encrypted = encryptionSystem.encrypted(password);
-    const result = await cardService.activateCard(cardId, encrypted);
+    const result = await cardsService.activate(cardId, encrypted);
     return result ? true : false;
 };
+
+const activateService = {
+    validate,
+    activate
+};
+
+export default activateService;
