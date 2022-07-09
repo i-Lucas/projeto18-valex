@@ -30,6 +30,12 @@ export async function find() {
 	return result.rows;
 }
 
+export async function findByCVV(cvv: string) {
+
+	const result = await db.query<Card, [string]>(`SELECT * FROM cards WHERE "securityCode" = $1`, [cvv]);
+	return result.rows[0];
+};
+
 export async function findById(id: number) {
 	const result = await db.query<Card, [number]>("SELECT * FROM cards WHERE id=$1", [id]);
 	return result.rows[0];
@@ -41,7 +47,7 @@ export async function findByTypeAndEmployeeId(type: TransactionTypes, employeeId
 		`SELECT * FROM cards WHERE type=$1 AND "employeeId"=$2`,
 		[type, employeeId]
 	);
-	
+
 	return result.rows;
 }
 
@@ -58,7 +64,7 @@ export async function findByCardDetails(number: string, cardholderName: string, 
 }
 
 export async function insert(cardData: CardInsertData) {
-	
+
 	const {
 		employeeId,
 		number,
