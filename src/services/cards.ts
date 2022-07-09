@@ -1,4 +1,6 @@
 import * as cardRepository from '../repositories/card.js';
+import * as paymentsRepository from '../repositories/payment.js';
+import * as rechargesRepository from '../repositories/recharge.js';
 
 async function validateEmployeeCardType(employeeId: number, cardType: string) {
 
@@ -8,21 +10,43 @@ async function validateEmployeeCardType(employeeId: number, cardType: string) {
     return card;
 };
 
-export async function findByCode(code: string) {
+async function findByCode(code: string) {
     const card = await cardRepository.findByCVV(code);
     if (!card) throw { status: 404, message: 'Card not found' };
     return card;
 };
 
-export async function activate(cardId: number, password: string) {
+async function activate(cardId: number, password: string) {
     await cardRepository.update(cardId, { isBlocked: false, password });
     return true;
 };
 
+async function findById(cardId: number) {
+
+    const card = await cardRepository.findById(cardId);
+    if (!card) throw { status: 404, message: 'Card not found' };
+    return card;
+};
+
+async function payments(cardId: number) {
+
+    const payments = await paymentsRepository.findByCardId(cardId);
+    return payments;
+};
+
+async function recharges(cardId: number) {
+
+    const recharges = await rechargesRepository.findByCardId(cardId);
+    return recharges;
+}
+
 const cardsService = {
     validateEmployeeCardType,
     findByCode,
-    activate
+    activate,
+    findById,
+    payments,
+    recharges
 };
 
 export default cardsService;

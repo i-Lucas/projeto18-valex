@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { TransactionTypes } from '../repositories/card.js';
 import buildCardService from '../services/build.js';
 import activateService from '../services/activate.js';
+import balanceService from '../services/balance.js';
 
 async function build(req: Request, res: Response) {
 
@@ -24,9 +25,19 @@ async function activate(req: Request, res: Response) {
         res.status(500).send('Something went wrong :/');
 };
 
+async function balance(req: Request, res: Response) {
+
+    const { cardNumber } = req.body;
+    const NumberInt = parseInt(cardNumber);
+
+    const results = await balanceService.balance(NumberInt);
+    res.status(200).send(results);
+};
+
 const cardsController = {
     build,
-    activate
+    activate,
+    balance
 };
 
 export default cardsController;
