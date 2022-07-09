@@ -9,6 +9,6 @@ export async function createCard(req: Request, res: Response) {
 
     const data = convertTypes(apikey, employeeId, cardType);
     const result = await validateBusinessRules(data.apikey, data.employeeIdNumber, data.cardTypeString);
-    await createNewCard(result.employeeId, result.fullName, result.cardType as TransactionTypes);
-    res.sendStatus(201);
+    const cardData = await createNewCard(result.employeeId, result.fullName, result.cardType as TransactionTypes);
+    res.status(201).send(cardData);
 }

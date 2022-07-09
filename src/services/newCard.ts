@@ -36,6 +36,11 @@ export async function createNewCard(employeeId: number, cardholderName: string, 
         isBlocked: true,
         type
     });
+
+    return {
+        cardNumber,
+        cardCVV
+    }
 };
 
 export function convertTypes(apikey: string, employeeId: string, cardType: string) {
