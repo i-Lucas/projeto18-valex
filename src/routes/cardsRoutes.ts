@@ -9,7 +9,7 @@ cardRouter.post('/create', cardsMiddleware.validateNewCard, cardsController.crea
 cardRouter.post('/activate', cardsMiddleware.validateActivation, cardsController.activateCard); // Activate a card
 cardRouter.get('/view'); // View a card
 cardRouter.get('/transactions', cardsMiddleware.validateIdentifier, cardsController.cardBalance); // View transactions for a card
-cardRouter.put('/block'); // Block a card
-cardRouter.put('/unlock'); // Unlock a card
+cardRouter.put('/block', cardsMiddleware.validateCardLock, cardsController.lockCard); // Block a card
+cardRouter.put('/unlock', cardsMiddleware.validateCardLock, cardsController.unlockCard); // Unlock a card
 
 export default cardRouter;

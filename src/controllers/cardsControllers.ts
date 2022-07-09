@@ -3,6 +3,7 @@ import { TransactionTypes } from '../repositories/cardsRepository.js';
 import buildCardService from '../services/createNewCardService.js';
 import activateService from '../services/activateCardService.js';
 import balanceService from '../services/balanceCheckService.js';
+import cardLockService from '../services/cardLockService.js';
 
 async function createNewCard(req: Request, res: Response) {
 
@@ -18,26 +19,45 @@ async function createNewCard(req: Request, res: Response) {
 async function activateCard(req: Request, res: Response) {
 
     const { cardCVV, password } = req.body;
-    const cardId = await activateService.validateCard(cardCVV, password);
-    const result = await activateService.activateCard(cardId, password);
-
-    result ? res.sendStatus(200) :
-        res.status(500).send('Something went wrong :/');
+    const cardId = await activateService.validateCard(cardCVV);
+    await activateService.activateCard(cardId, password);
+    res.sendStatus(200);
 };
 
 async function cardBalance(req: Request, res: Response) {
 
     const { cardNumber } = req.body;
     const NumberInt = parseInt(cardNumber);
-
     const results = await balanceService.cardBalance(NumberInt);
     res.status(200).send(results);
 };
 
+async function lockCard(req: Request, res: Response) {
+
+    const { cardNumber, cardPassword } = req.body;
+    const NumberInt = parseInt(cardNumber);
+    
+    await cardLockService.validateCard(NumberInt, cardPassword, 'block');
+    await cardLockService.blockCard(NumberInt);
+    res.sendStatus(200);
+};
+
+async function unlockCard(req: Request, res: Response) {
+
+    const { cardNumber, cardPassword } = req.body;
+    const NumberInt = parseInt(cardNumber);
+
+    await cardLockService.validateCard(NumberInt, cardPassword, 'unlock');
+    await cardLockService.unblockCard(NumberInt);
+    res.sendStatus(200);
+}
+
 const cardsController = {
     createNewCard,
     activateCard,
-    cardBalance
+    cardBalance,
+    lockCard,
+    unlockCard
 };
 
 export default cardsController;
