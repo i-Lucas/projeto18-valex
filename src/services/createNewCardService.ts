@@ -1,15 +1,15 @@
 import { faker } from '@faker-js/faker';
-import encryptionSystem from './encrypted.js';
-import companiesService from './companies.js';
-import employeeService from './employee.js';
-import cardsService from './cards.js';
+import encryptionSystem from './encryptionServices.js';
+import companiesService from './companiesServices.js';
+import employeeService from './employeeServices.js';
+import cardsService from './cardsServices.js';
 
-import * as cardRepository from '../repositories/card.js';
+import * as cardRepository from '../repositories/cardsRepository.js';
 
-async function validate(apikey: string, employeeId: number, cardType: string) {
+async function validateCard(apikey: string, employeeId: number, cardType: string) {
 
-    const company = await companiesService.validate(apikey);
-    const employee = await employeeService.validate(employeeId);
+    const company = await companiesService.validateCompany(apikey);
+    const employee = await employeeService.validateEmployee(employeeId);
 
     await companiesService.validateEmployee(company.id, employeeId);
     await cardsService.validateEmployeeCardType(employeeId, cardType);
@@ -21,11 +21,11 @@ async function validate(apikey: string, employeeId: number, cardType: string) {
     };
 };
 
-async function build(employeeId: number, cardholderName: string, type: cardRepository.TransactionTypes) {
+async function buildCard(employeeId: number, cardholderName: string, type: cardRepository.TransactionTypes) {
 
     const cardNumber = faker.finance.creditCardNumber('63[7-9]#-####-####-###L');
     const cardCVV = faker.finance.creditCardCVV();
-    const encrypted = encryptionSystem.encrypted(cardCVV);
+    const encrypted = encryptionSystem.encryptIt(cardCVV);
     const expiration = new Date(new Date().getFullYear() + 5, new Date().getMonth()).toISOString().substring(0, 7);
 
     await cardRepository.insert({
@@ -69,8 +69,8 @@ function getFormattedName(name: string) {
 };
 
 const buildCardService = {
-    validate,
-    build
+    validateCard,
+    buildCard
 };
 
 export default buildCardService;

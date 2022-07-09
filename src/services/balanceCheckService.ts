@@ -1,6 +1,6 @@
-import cardsService from './cards.js';
+import cardsService from './cardsServices.js';
 
-async function balance(id: number) {
+async function cardBalance(id: number) {
 
     const cardId = await cardsService.findById(id);
     if (!cardId) throw { status: 404, message: 'Card not found' };
@@ -17,7 +17,7 @@ async function balance(id: number) {
 };
 
 const balanceService = {
-    balance
+    cardBalance
 };
 
 export default balanceService;

@@ -1,6 +1,6 @@
-import * as cardRepository from '../repositories/card.js';
-import * as paymentsRepository from '../repositories/payment.js';
-import * as rechargesRepository from '../repositories/recharge.js';
+import * as cardRepository from '../repositories/cardsRepository.js';
+import * as paymentsRepository from '../repositories/paymentRepository.js';
+import * as rechargesRepository from '../repositories/rechargeRepository.js';
 
 async function validateEmployeeCardType(employeeId: number, cardType: string) {
 

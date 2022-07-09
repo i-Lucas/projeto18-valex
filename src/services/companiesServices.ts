@@ -1,7 +1,7 @@
-import * as companyRepository from '../repositories/company.js';
-import * as employeeRepository from '../repositories/employee.js';
+import * as companyRepository from '../repositories/companyRepository.js';
+import * as employeeRepository from '../repositories/employeeRepository.js';
 
-async function validate(apiKey: string) {
+async function validateCompany(apiKey: string) {
     const company = await companyRepository.findByApiKey(apiKey);
     if (!company) throw { status: 401, message: 'Invalid API key' };
     return company;
@@ -15,7 +15,7 @@ async function validateEmployee(companyId: number, employeeId: number) {
 };
 
 const companiesService = {
-    validate,
+    validateCompany,
     validateEmployee
 };
 

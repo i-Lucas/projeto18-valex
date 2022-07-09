@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-async function activate(req: Request, res: Response, next: NextFunction) {
+async function validateActivation(req: Request, res: Response, next: NextFunction) {
 
     const { cardCVV, password } = req.body;
     if (!cardCVV) throw { status: 400, message: 'Missing Card CVV' };
@@ -9,7 +9,7 @@ async function activate(req: Request, res: Response, next: NextFunction) {
     next();
 };
 
-async function build(req: Request, res: Response, next: NextFunction) {
+async function validateNewCard(req: Request, res: Response, next: NextFunction) {
 
     const { employeeId, cardType } = req.body;
     const { apikey } = req.headers;
@@ -23,7 +23,7 @@ async function build(req: Request, res: Response, next: NextFunction) {
     next();
 };
 
-async function identifier(req: Request, res: Response, next: NextFunction) {
+async function validateIdentifier(req: Request, res: Response, next: NextFunction) {
 
     const { cardNumber } = req.body;
     if (!cardNumber) throw { status: 400, message: 'Missing Card Number' };
@@ -31,9 +31,9 @@ async function identifier(req: Request, res: Response, next: NextFunction) {
 };
 
 const cardsMiddleware = {
-    activate,
-    build,
-    identifier
+    validateActivation,
+    validateNewCard,
+    validateIdentifier
 };
 
 export default cardsMiddleware;

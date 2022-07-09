@@ -2,14 +2,14 @@ import express from 'express';
 import 'express-async-errors';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import routes from './routes/index.js';
-import errorHandler from './middlewares/errors.js';
+import appRouter from './routes/appRouter.js';
+import errorHandler from './middlewares/errorHandle.js';
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(routes);
+app.use(appRouter);
 app.use(errorHandler);
 
 const port = + process.env.PORT || 3000;

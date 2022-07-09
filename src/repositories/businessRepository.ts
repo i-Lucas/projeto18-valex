@@ -1,5 +1,5 @@
 import db from "../config/db.js";
-import { TransactionTypes } from "./card.js";
+import { TransactionTypes } from "./cardsRepository.js";
 
 export interface Business {
 
