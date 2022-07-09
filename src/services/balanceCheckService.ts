@@ -9,11 +9,11 @@ async function cardBalance(id: number) {
     const recharges = await cardsService.findCardRecharges(cardId.id);
     const balance = recharges.reduce((acc, cur) => acc + cur.amount, 0) -
         payments.reduce((acc, cur) => acc + cur.amount, 0);
-        
+
     return {
-        balance: balance !== 0 ? `$ ${balance}` : '$ 0.00',
-        transactions: payments.length === 0 ? 'no transaction found' : payments,
-        recharges: recharges.length === 0 ? 'no recharge done' : recharges
+        balance,
+        transactions: payments,
+        recharges: recharges
     };
 };
 

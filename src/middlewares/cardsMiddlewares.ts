@@ -26,32 +26,45 @@ async function validateNewCard(req: Request, res: Response, next: NextFunction) 
 
 async function validateIdentifier(req: Request, res: Response, next: NextFunction) {
 
-    const { cardNumber } = req.body;
-    if (!cardNumber) throw { status: 400, message: 'Missing Card Number' };
+    const { cardId } = req.body;
+    if (!cardId) throw { status: 400, message: 'Missing card identifier' };
     next();
 };
 
 async function validateCardLock(req: Request, res: Response, next: NextFunction) {
 
-    const { cardNumber, cardPassword } = req.body;
+    const { cardId, cardPassword } = req.body;
 
-    if (!cardNumber) throw { status: 400, message: 'Missing Card Number' };
-    if (!cardPassword) throw { status: 400, message: 'Missing Card Password' };
+    if (!cardId) throw { status: 400, message: 'Missing card identifier' };
+    if (!cardPassword) throw { status: 400, message: 'Missing card Password' };
     next();
 };
 
 async function validateCardRecharge(req: Request, res: Response, next: NextFunction) {
 
     const { companykey } = req.headers;
-    const { cardNumber, rechargeAmount } = req.body;
+    const { cardId, rechargeAmount } = req.body;
 
     if (!companykey) throw { status: 400, message: 'Missing API key' };
-    if (!cardNumber) throw { status: 400, message: 'Missing Card Number' };
+    if (!cardId) throw { status: 400, message: 'Missing card identifier' };
     if (typeof (rechargeAmount) !== 'number') throw { status: 400, message: 'Invalid recharge amount' };
     if (rechargeAmount <= 0) throw { status: 400, message: 'Invalid Recharge Amount' };
     if (!rechargeAmount) throw { status: 400, message: 'Missing Recharge Amount' };
     next();
-}
+};
+
+async function validatePurchases(req: Request, res: Response, next: NextFunction) {
+
+    const { cardId, cardPassword, businessId, amount } = req.body;
+
+    if (!cardId) throw { status: 400, message: 'Missing card identifier' };
+    if (!cardPassword) throw { status: 400, message: 'Missing card Password' };
+    if (!businessId) throw { status: 400, message: 'Missing business identifier' };
+    if (!amount) throw { status: 400, message: 'Missing amount' };
+    if (typeof (amount) !== 'number') throw { status: 400, message: 'Invalid amount' };
+    if (amount <= 0) throw { status: 400, message: 'Invalid amount' };
+    next();
+};
 
 const cardsMiddleware = {
 
@@ -59,7 +72,8 @@ const cardsMiddleware = {
     validateNewCard,
     validateIdentifier,
     validateCardLock,
-    validateCardRecharge
+    validateCardRecharge,
+    validatePurchases
 };
 
 export default cardsMiddleware;

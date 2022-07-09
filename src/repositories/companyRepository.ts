@@ -7,6 +7,12 @@ export interface Company {
 	apiKey?: string;
 }
 
+export async function findById(companyId: number) {
+
+	const company = await db.query(`SELECT * FROM companies WHERE id = ${companyId}`);
+	return company[0];
+}
+
 export async function findByApiKey(apiKey: string) {
 	const result = await db.query<Company, [string]>(`SELECT * FROM companies WHERE "apiKey"=$1`, [apiKey]);
 	return result.rows[0];

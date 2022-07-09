@@ -1,9 +1,9 @@
 import * as cardRepository from '../repositories/cardsRepository.js';
 import * as paymentsRepository from '../repositories/paymentRepository.js';
 import * as rechargesRepository from '../repositories/rechargeRepository.js';
-import * as refilRepository from '../repositories/rechargeRepository.js';
 
 import currentMonthAndYear from '../utils/currentDate.js';
+import encryptionSystem from './encryptionServices.js';
 
 async function validateEmployeeCardType(employeeId: number, cardType: string) {
 
@@ -21,7 +21,6 @@ async function findCardByCode(code: string) {
 
 async function activateCard(cardId: number, password: string) {
     await cardRepository.update(cardId, { isBlocked: false, password });
-    return true;
 };
 
 async function findCardById(cardId: number) {
@@ -59,27 +58,26 @@ async function checkBlocked(cardId: number) {
 
 async function validateCardPassword(cardId: number, password: string) {
 
+    const cryptPass = encryptionSystem.encryptIt(password);
     const card = await cardRepository.findById(cardId);
-    if (card.password !== password) return false;
+    if (card.password !== cryptPass) return false;
     return true;
 };
 
 async function blockCard(cardId: number) {
-
     await cardRepository.update(cardId, { isBlocked: true });
-    return true;
 };
 
 async function unblockCard(cardId: number) {
-
     await cardRepository.update(cardId, { isBlocked: false });
-    return true;
 };
 
 async function rechargeCard(cardId: number, amount: number) {
-
     await rechargesRepository.insert({ cardId, amount });
-    return true;
+};
+
+async function saveCardPurchase(cardId: number, businessId: number, amount: number) {
+    await paymentsRepository.insert({ cardId, businessId, amount });
 };
 
 const cardsService = {
@@ -95,7 +93,8 @@ const cardsService = {
     validateCardPassword,
     blockCard,
     unblockCard,
-    rechargeCard
+    rechargeCard,
+    saveCardPurchase
 };
 
 export default cardsService;
