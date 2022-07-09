@@ -1,11 +1,11 @@
 import { Router } from 'express';
 
 import { createCard } from '../controllers/card.js';
-import { validateSchema } from '../middlewares/newCard.js';
+import { newCardSchema } from '../middlewares/newCard.js';
 
 const cardRouter = Router();
 
-cardRouter.post('/create', validateSchema, createCard); // Create a new card
+cardRouter.post('/create', newCardSchema, createCard); // Create a new card
 cardRouter.post('/activate'); // Activate a card
 cardRouter.get('/view'); // View a card
 cardRouter.get('/transactions'); // View transactions for a card

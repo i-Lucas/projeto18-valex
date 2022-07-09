@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export async function validateSchema(req: Request, res: Response, next: NextFunction) {
+export async function newCardSchema(req: Request, res: Response, next: NextFunction) {
 
     const { employeeId, cardType } = req.body;
     const { apikey } = req.headers;
