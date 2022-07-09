@@ -1,6 +1,8 @@
 import * as cardRepository from '../repositories/cardsRepository.js';
 import * as paymentsRepository from '../repositories/paymentRepository.js';
 import * as rechargesRepository from '../repositories/rechargeRepository.js';
+import * as refilRepository from '../repositories/rechargeRepository.js';
+
 import currentMonthAndYear from '../utils/currentDate.js';
 
 async function validateEmployeeCardType(employeeId: number, cardType: string) {
@@ -74,6 +76,12 @@ async function unblockCard(cardId: number) {
     return true;
 };
 
+async function rechargeCard(cardId: number, amount: number) {
+
+    await rechargesRepository.insert({ cardId, amount });
+    return true;
+};
+
 const cardsService = {
 
     validateEmployeeCardType,
@@ -86,7 +94,8 @@ const cardsService = {
     checkBlocked,
     validateCardPassword,
     blockCard,
-    unblockCard
+    unblockCard,
+    rechargeCard
 };
 
 export default cardsService;

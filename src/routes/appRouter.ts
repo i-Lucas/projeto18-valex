@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import cardRouter from './cardsRoutes.js';
-import refillsRouter from './refillsRoutes.js';
+import refillsRouter from './rechargeRoutes.js';
 import purchasesRouter from './purchasesRoutes.js';
 
 const appRouter = Router();

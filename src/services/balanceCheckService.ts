@@ -7,9 +7,9 @@ async function cardBalance(id: number) {
 
     const payments = await cardsService.findCardPayments(cardId.id);
     const recharges = await cardsService.findCardRecharges(cardId.id);
-    const balance = payments.reduce((acc, cur) => acc + cur.amount, 0) -
-        recharges.reduce((acc, cur) => acc + cur.amount, 0);
-
+    const balance = recharges.reduce((acc, cur) => acc + cur.amount, 0) -
+        payments.reduce((acc, cur) => acc + cur.amount, 0);
+        
     return {
         balance: balance !== 0 ? `$ ${balance}` : '$ 0.00',
         transactions: payments.length === 0 ? 'no transaction found' : payments,

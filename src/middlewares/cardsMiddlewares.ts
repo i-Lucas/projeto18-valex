@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 async function validateActivation(req: Request, res: Response, next: NextFunction) {
 
     const { cardCVV, password } = req.body;
-    
+
     if (!cardCVV) throw { status: 400, message: 'Missing Card CVV' };
     if (!password) throw { status: 400, message: 'Missing Card Password' };
     if (password.length !== 4) throw { status: 400, message: 'Invalid Card Password' };
@@ -13,9 +13,9 @@ async function validateActivation(req: Request, res: Response, next: NextFunctio
 async function validateNewCard(req: Request, res: Response, next: NextFunction) {
 
     const { employeeId, cardType } = req.body;
-    const { apikey } = req.headers;
+    const { companykey } = req.headers;
 
-    if (!apikey) throw { status: 400, message: 'Missing API key' };
+    if (!companykey) throw { status: 400, message: 'Missing API key' };
     if (!employeeId) throw { status: 400, message: 'Missing employee identifier' };
     if (!cardType) throw { status: 400, message: 'Missing card type' };
 
@@ -40,12 +40,26 @@ async function validateCardLock(req: Request, res: Response, next: NextFunction)
     next();
 };
 
+async function validateCardRecharge(req: Request, res: Response, next: NextFunction) {
+
+    const { companykey } = req.headers;
+    const { cardNumber, rechargeAmount } = req.body;
+
+    if (!companykey) throw { status: 400, message: 'Missing API key' };
+    if (!cardNumber) throw { status: 400, message: 'Missing Card Number' };
+    if (typeof (rechargeAmount) !== 'number') throw { status: 400, message: 'Invalid recharge amount' };
+    if (rechargeAmount <= 0) throw { status: 400, message: 'Invalid Recharge Amount' };
+    if (!rechargeAmount) throw { status: 400, message: 'Missing Recharge Amount' };
+    next();
+}
+
 const cardsMiddleware = {
 
     validateActivation,
     validateNewCard,
     validateIdentifier,
-    validateCardLock
+    validateCardLock,
+    validateCardRecharge
 };
 
 export default cardsMiddleware;
