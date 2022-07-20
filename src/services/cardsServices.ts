@@ -58,9 +58,8 @@ async function checkBlocked(cardId: number) {
 
 async function validateCardPassword(cardId: number, password: string) {
 
-    const cryptPass = encryptionSystem.encryptIt(password);
     const card = await cardRepository.findById(cardId);
-    if (card.password !== cryptPass) return false;
+    if (card.password !== password) return false;
     return true;
 };
 

@@ -2,11 +2,12 @@ import checkCardStatus from './cardStatusService.js';
 import cardsService from './cardsServices.js';
 import validateBusiness from './businessServices.js';
 import balanceService from './balanceCheckService.js';
+import encryptionSystem from './encryptionServices.js';
 
 async function validateNewPurchase(cardId: number, cardPassword: string, businessId: number, amount: number) {
 
     const card = await checkCardStatus(cardId);
-    const validatePassword = await cardsService.validateCardPassword(cardId, cardPassword);
+    const validatePassword = await cardsService.validateCardPassword(cardId, encryptionSystem.encryptIt(cardPassword));
 
     if (!validatePassword) throw { status: 401, message: 'Invalid card password' };
     const business = await validateBusiness(businessId);

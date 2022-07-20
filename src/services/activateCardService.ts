@@ -6,7 +6,7 @@ async function validateCard(cardCVV: string) {
 
     const encrypted = encryptionSystem.encryptIt(cardCVV);
     const card = await cardsService.findCardByCode(encrypted);
-    if (cardsService.checkBlocked(card.id)) throw { status: 400, message: 'This card already activated' };
+    if (!card.isBlocked) throw { status: 400, message: 'This card already activated' };
     if (currentMonthAndYear() > card.expirationDate) throw { status: 400, message: 'This card expired' };
     return card.id;
 };
